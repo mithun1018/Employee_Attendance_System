@@ -2,8 +2,17 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { AuthState, LoginCredentials, RegisterData, User } from '../../types';
 import authService from '../../services/authService';
 
+const getUserFromStorage = (): User | null => {
+  try {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
+  } catch {
+    return null;
+  }
+};
+
 const initialState: AuthState = {
-  user: JSON.parse(localStorage.getItem('user') || 'null'),
+  user: getUserFromStorage(),
   token: localStorage.getItem('token'),
   isLoading: false,
   error: null,
