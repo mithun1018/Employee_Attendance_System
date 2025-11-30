@@ -4,9 +4,23 @@ import { Op } from 'sequelize';
 export async function getAllAttendance(filters: any) {
   const where: any = {};
 
-  if (filters.date) {
+  // Support both exact date and date range
+  if (filters.startDate && filters.endDate) {
+    where.date = {
+      [Op.between]: [filters.startDate, filters.endDate],
+    };
+  } else if (filters.startDate) {
+    where.date = {
+      [Op.gte]: filters.startDate,
+    };
+  } else if (filters.endDate) {
+    where.date = {
+      [Op.lte]: filters.endDate,
+    };
+  } else if (filters.date) {
     where.date = filters.date;
   }
+  
   if (filters.status) {
     where.status = filters.status;
   }

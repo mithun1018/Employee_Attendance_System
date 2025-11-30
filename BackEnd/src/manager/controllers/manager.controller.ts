@@ -54,6 +54,8 @@ export async function exportAttendance(req: Request, res: Response) {
   try {
     const filters = {
       date: req.query.date,
+      startDate: req.query.startDate,
+      endDate: req.query.endDate,
       status: req.query.status,
       userId: req.query.userId,
     };
