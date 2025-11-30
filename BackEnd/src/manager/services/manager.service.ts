@@ -111,9 +111,9 @@ export async function getDashboardStats() {
     where: { date: today },
   });
 
-  const presentCount = todayAttendance.filter(a => a.getDataValue('status') === 'present').length;
-  const lateCount = todayAttendance.filter(a => a.getDataValue('status') === 'late').length;
-  const halfDayCount = todayAttendance.filter(a => a.getDataValue('status') === 'half-day').length;
+  const presentCount = todayAttendance.filter((a: any) => a.getDataValue('status') === 'present').length;
+  const lateCount = todayAttendance.filter((a: any) => a.getDataValue('status') === 'late').length;
+  const halfDayCount = todayAttendance.filter((a: any) => a.getDataValue('status') === 'half-day').length;
   
   // Assuming anyone not in attendance table today is absent
   const markedCount = todayAttendance.length;
