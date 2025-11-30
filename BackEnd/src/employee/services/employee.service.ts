@@ -50,9 +50,13 @@ export async function checkOut(userId: number) {
 
   const now = new Date();
   const checkInTime = attendance.getDataValue('checkInTime');
+
+  if (!checkInTime) {
+    throw new Error('Check-in time not set for this attendance record');
+  }
   
   // Calculate total hours
-  const diffMs = now.getTime() - new Date(checkInTime).getTime();
+  const diffMs = now.getTime() - new Date(checkInTime as Date).getTime();
   const totalHours = parseFloat((diffMs / (1000 * 60 * 60)).toFixed(2));
 
   // Update status for half-day if hours < 4 (example rule)

@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './auth/routes/auth.routes';
 import employeeRoutes from './employee/routes/employee.routes';
+import managerRoutes from './manager/routes/manager.routes';
 import { sequelize } from './models';
 
 dotenv.config();
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/attendance', employeeRoutes);
+app.use('/api/manager', managerRoutes);
 
 app.get('/', (_req: Request, res: Response) => res.send('Employee Attendance Backend is running'));
 
