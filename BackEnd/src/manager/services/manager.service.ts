@@ -3,6 +3,7 @@ import { Op } from 'sequelize';
 
 export async function getAllAttendance(filters: any) {
   const where: any = {};
+  const targetDate = filters.date || new Date().toISOString().split('T')[0];
 
   // Support both exact date and date range
   if (filters.startDate && filters.endDate) {
@@ -21,14 +22,15 @@ export async function getAllAttendance(filters: any) {
     where.date = filters.date;
   }
   
-  if (filters.status) {
+  if (filters.status && filters.status !== 'absent') {
     where.status = filters.status;
   }
   if (filters.userId) {
     where.userId = filters.userId;
   }
 
-  return await Attendance.findAll({
+  // Get attendance records
+  const attendanceRecords = await Attendance.findAll({
     where,
     include: [{
       model: User,
@@ -36,6 +38,41 @@ export async function getAllAttendance(filters: any) {
     }],
     order: [['date', 'DESC']],
   });
+
+  // If filtering by a specific date (not a range), include absent employees
+  if (filters.date && !filters.startDate && !filters.endDate) {
+    // Get all employees
+    const allEmployees = await User.findAll({
+      where: { role: 'employee' },
+      attributes: ['id', 'name', 'email', 'employeeId', 'department'],
+    });
+
+    // Find employees who have no record for this date
+    const employeesWithRecords = new Set(attendanceRecords.map((r: any) => r.userId));
+    
+    const absentEmployees = allEmployees
+      .filter((emp: any) => !employeesWithRecords.has(emp.id))
+      .map((emp: any) => ({
+        id: null,
+        userId: emp.id,
+        date: filters.date,
+        checkInTime: null,
+        checkOutTime: null,
+        status: 'absent',
+        totalHours: null,
+        User: emp,
+      }));
+
+    // If filtering specifically for absent, return only absent employees
+    if (filters.status === 'absent') {
+      return absentEmployees;
+    }
+
+    // Otherwise, combine both lists
+    return [...attendanceRecords, ...absentEmployees];
+  }
+
+  return attendanceRecords;
 }
 
 export async function getEmployeeAttendance(userId: number) {
