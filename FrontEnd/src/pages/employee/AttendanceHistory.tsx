@@ -60,15 +60,15 @@ const AttendanceHistory: React.FC = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'present':
-        return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+        return 'badge badge-success';
       case 'late':
-        return 'bg-amber-100 text-amber-700 border-amber-200';
+        return 'badge badge-warning';
       case 'half-day':
-        return 'bg-orange-100 text-orange-700 border-orange-200';
+        return 'badge badge-warning';
       case 'absent':
-        return 'bg-red-100 text-red-700 border-red-200';
+        return 'badge badge-danger';
       default:
-        return 'bg-gray-100 text-gray-700 border-gray-200';
+        return 'badge badge-neutral';
     }
   };
 
@@ -79,7 +79,7 @@ const AttendanceHistory: React.FC = () => {
     const startDay = getDay(monthStart);
 
     return (
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="card overflow-hidden">
         {/* Calendar Header */}
         <div className="p-5 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-gray-50 to-white">
           <button
@@ -181,17 +181,17 @@ const AttendanceHistory: React.FC = () => {
   const selectedDateAttendance = selectedDate ? getAttendanceForDate(selectedDate) : null;
 
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-8 lg:space-y-10 animate-fadeIn pb-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-2">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Attendance History</h1>
-          <p className="text-gray-500 mt-1">View and track your past attendance records</p>
+          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Attendance History</h1>
+          <p className="text-gray-500 mt-2">View and track your past attendance records</p>
         </div>
-        <div className="flex gap-2 p-1 bg-gray-100 rounded-xl">
+        <div className="flex gap-2 p-1.5 bg-gray-100 rounded-xl">
           <button
             onClick={() => setViewMode('calendar')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all ${
+            className={`flex items-center gap-2 px-5 py-3 rounded-lg font-medium text-sm transition-all ${
               viewMode === 'calendar'
                 ? 'bg-white text-gray-900 shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'
@@ -202,7 +202,7 @@ const AttendanceHistory: React.FC = () => {
           </button>
           <button
             onClick={() => setViewMode('table')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all ${
+            className={`flex items-center gap-2 px-5 py-3 rounded-lg font-medium text-sm transition-all ${
               viewMode === 'table'
                 ? 'bg-white text-gray-900 shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'
@@ -215,18 +215,18 @@ const AttendanceHistory: React.FC = () => {
       </div>
 
       {viewMode === 'calendar' ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Calendar */}
           <div className="lg:col-span-2">{renderCalendar()}</div>
 
           {/* Selected Date Details */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 h-fit">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
-                <CalendarDays className="w-5 h-5 text-indigo-600" />
+          <div className="card p-6 lg:p-8 h-fit">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+                <CalendarDays className="w-6 h-6 text-indigo-600" />
               </div>
               <div>
-                <h3 className="font-bold text-gray-900">
+                <h3 className="font-bold text-gray-900 text-lg">
                   {selectedDate ? format(selectedDate, 'MMMM d, yyyy') : 'Select a date'}
                 </h3>
                 {selectedDate && (
@@ -239,9 +239,7 @@ const AttendanceHistory: React.FC = () => {
               <div className="space-y-5">
                 <div className="flex items-center justify-center">
                   <span
-                    className={`px-4 py-2 rounded-xl text-sm font-semibold capitalize border ${getStatusBadge(
-                      selectedDateAttendance.status
-                    )}`}
+                    className={getStatusBadge(selectedDateAttendance.status)}
                   >
                     {selectedDateAttendance.status}
                   </span>
@@ -302,29 +300,17 @@ const AttendanceHistory: React.FC = () => {
         </div>
       ) : (
         /* Table View */
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
+        <div className="card overflow-hidden">
+          <div className="table-container border-0 rounded-none">
+            <table className="table">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Date
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Day
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Check In
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Check Out
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Hours
-                  </th>
+                <tr>
+                  <th>Date</th>
+                  <th>Day</th>
+                  <th>Check In</th>
+                  <th>Check Out</th>
+                  <th>Status</th>
+                  <th>Hours</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -351,9 +337,7 @@ const AttendanceHistory: React.FC = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
-                          className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize border ${getStatusBadge(
-                            record.status
-                          )}`}
+                          className={getStatusBadge(record.status)}
                         >
                           {record.status}
                         </span>

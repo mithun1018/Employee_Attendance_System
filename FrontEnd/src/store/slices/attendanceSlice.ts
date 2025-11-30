@@ -85,7 +85,7 @@ export const fetchTodayAttendance = createAsyncThunk(
 // Manager thunks
 export const fetchAllAttendance = createAsyncThunk(
   'attendance/fetchAllAttendance',
-  async (filters: { date?: string; status?: string; userId?: number } | undefined, { rejectWithValue }) => {
+  async (filters: { date?: string; startDate?: string; endDate?: string; status?: string; userId?: number; department?: string } | undefined, { rejectWithValue }) => {
     try {
       return await attendanceService.getAllAttendance(filters);
     } catch (error: any) {

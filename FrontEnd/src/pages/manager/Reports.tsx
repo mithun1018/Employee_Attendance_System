@@ -30,7 +30,10 @@ const Reports: React.FC = () => {
   const [exportMessage, setExportMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
-    dispatch(fetchAllAttendance());
+    dispatch(fetchAllAttendance({
+      startDate: filters.startDate,
+      endDate: filters.endDate,
+    }));
   }, [dispatch]);
 
   const handleFilterChange = (key: string, value: string) => {
@@ -40,7 +43,8 @@ const Reports: React.FC = () => {
   const applyFilters = () => {
     dispatch(
       fetchAllAttendance({
-        date: filters.startDate || undefined,
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
         status: filters.status || undefined,
       })
     );
@@ -78,15 +82,15 @@ const Reports: React.FC = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'present':
-        return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+        return 'badge badge-success';
       case 'late':
-        return 'bg-amber-100 text-amber-700 border-amber-200';
+        return 'badge badge-warning';
       case 'half-day':
-        return 'bg-orange-100 text-orange-700 border-orange-200';
+        return 'badge badge-warning';
       case 'absent':
-        return 'bg-red-100 text-red-700 border-red-200';
+        return 'badge badge-danger';
       default:
-        return 'bg-gray-100 text-gray-700 border-gray-200';
+        return 'badge badge-neutral';
     }
   };
 
@@ -143,12 +147,12 @@ const Reports: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-8 lg:space-y-10 animate-fadeIn pb-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-2">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Reports</h1>
-          <p className="text-gray-500 mt-1">Generate and export attendance reports</p>
+          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Reports</h1>
+          <p className="text-gray-500 mt-2">Generate and export attendance reports</p>
         </div>
         <button
           onClick={handleExportCSV}
@@ -188,10 +192,10 @@ const Reports: React.FC = () => {
       )}
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
-            <Filter className="w-5 h-5 text-indigo-600" />
+      <div className="filter-section">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+            <Filter className="w-6 h-6 text-indigo-600" />
           </div>
           <div>
             <h2 className="text-lg font-bold text-gray-900">Filter Options</h2>
@@ -201,7 +205,7 @@ const Reports: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* Start Date */}
           <div>
-            <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+            <label className="form-label">
               <Calendar className="w-4 h-4 text-gray-400" />
               Start Date
             </label>
@@ -209,13 +213,13 @@ const Reports: React.FC = () => {
               type="date"
               value={filters.startDate}
               onChange={(e) => handleFilterChange('startDate', e.target.value)}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white transition-all"
+              className="form-input"
             />
           </div>
 
           {/* End Date */}
           <div>
-            <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+            <label className="form-label">
               <Calendar className="w-4 h-4 text-gray-400" />
               End Date
             </label>
@@ -223,20 +227,20 @@ const Reports: React.FC = () => {
               type="date"
               value={filters.endDate}
               onChange={(e) => handleFilterChange('endDate', e.target.value)}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white transition-all"
+              className="form-input"
             />
           </div>
 
           {/* Status Filter */}
           <div>
-            <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+            <label className="form-label">
               <Filter className="w-4 h-4 text-gray-400" />
               Status
             </label>
             <select
               value={filters.status}
               onChange={(e) => handleFilterChange('status', e.target.value)}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white transition-all cursor-pointer"
+              className="form-input cursor-pointer"
             >
               <option value="">All Status</option>
               <option value="present">Present</option>
@@ -261,7 +265,7 @@ const Reports: React.FC = () => {
       {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {summaryCards.map((card, index) => (
-          <div key={index} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hover:shadow-lg transition-shadow">
+          <div key={index} className="card card-hover p-5">
             <div className="flex items-center justify-between mb-3">
               <div className={`w-10 h-10 ${card.bgColor} rounded-xl flex items-center justify-center`}>
                 <card.icon className={`w-5 h-5 ${card.textColor}`} />
@@ -274,7 +278,7 @@ const Reports: React.FC = () => {
       </div>
 
       {/* Data Table */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="card overflow-hidden">
         <div className="p-6 border-b border-gray-100 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
@@ -286,40 +290,24 @@ const Reports: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        <div className="table-container">
+          <table className="table">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-100">
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Employee ID
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Department
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Check In
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Check Out
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Hours
-                </th>
+              <tr>
+                <th>Employee ID</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Date</th>
+                <th>Check In</th>
+                <th>Check Out</th>
+                <th>Status</th>
+                <th>Hours</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
               {isLoading ? (
                 <tr>
-                  <td colSpan={8} className="px-6 py-12 text-center">
+                  <td colSpan={8} className="text-center py-12">
                     <div className="flex flex-col items-center justify-center gap-3">
                       <div className="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
                       <span className="text-gray-500">Loading report data...</span>
@@ -329,12 +317,12 @@ const Reports: React.FC = () => {
               ) : allAttendance.length > 0 ? (
                 allAttendance.map((record) => (
                   <tr key={record.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td>
                       <span className="text-sm font-semibold text-gray-900">
                         {record.User?.employeeId || '-'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td>
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
                           <span className="text-white font-bold text-xs">
@@ -346,34 +334,30 @@ const Reports: React.FC = () => {
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td className="text-gray-600">
                       {record.User?.department || '-'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td>
                       <span className="text-sm font-medium text-gray-900">
                         {format(parseISO(record.date), 'MMM d, yyyy')}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td className="text-gray-600">
                       {record.checkInTime
                         ? format(parseISO(record.checkInTime), 'hh:mm a')
                         : '-'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td className="text-gray-600">
                       {record.checkOutTime
                         ? format(parseISO(record.checkOutTime), 'hh:mm a')
                         : '-'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize border ${getStatusBadge(
-                          record.status
-                        )}`}
-                      >
+                    <td>
+                      <span className={`badge ${getStatusBadge(record.status)}`}>
                         {record.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td>
                       <span className="text-sm font-medium text-gray-900">
                         {record.totalHours ? `${record.totalHours.toFixed(2)} hrs` : '-'}
                       </span>
@@ -382,7 +366,7 @@ const Reports: React.FC = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={8} className="px-6 py-12 text-center">
+                  <td colSpan={8} className="text-center py-12">
                     <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
                       <FileText className="w-8 h-8 text-gray-400" />
                     </div>

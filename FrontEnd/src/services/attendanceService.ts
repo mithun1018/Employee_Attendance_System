@@ -31,13 +31,19 @@ export const attendanceService = {
   // Manager endpoints
   async getAllAttendance(filters?: {
     date?: string;
+    startDate?: string;
+    endDate?: string;
     status?: string;
     userId?: number;
+    department?: string;
   }): Promise<Attendance[]> {
     const params = new URLSearchParams();
     if (filters?.date) params.append('date', filters.date);
+    if (filters?.startDate) params.append('startDate', filters.startDate);
+    if (filters?.endDate) params.append('endDate', filters.endDate);
     if (filters?.status) params.append('status', filters.status);
     if (filters?.userId) params.append('userId', filters.userId.toString());
+    if (filters?.department) params.append('department', filters.department);
     
     const response = await api.get(`/manager/attendance?${params.toString()}`);
     return response.data;

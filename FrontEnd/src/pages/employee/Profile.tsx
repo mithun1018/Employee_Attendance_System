@@ -42,7 +42,7 @@ const Profile: React.FC = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="w-full max-w-2xl space-y-8 animate-fadeIn">
+      <div className="w-full max-w-2xl space-y-8 lg:space-y-10 animate-fadeIn pb-8">
         {/* Profile Hero Card */}
       <div className="relative overflow-hidden rounded-3xl" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
         {/* Background decorations */}
@@ -90,7 +90,7 @@ const Profile: React.FC = () => {
         {profileDetails.map((detail, index) => (
           <div
             key={index}
-            className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all duration-300 group"
+            className="card card-hover p-6 group"
           >
             <div className="flex items-start gap-4">
               <div className={`w-12 h-12 ${detail.bgColor} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>

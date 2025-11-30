@@ -93,7 +93,7 @@ const MarkAttendance: React.FC = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="w-full max-w-2xl space-y-8 animate-fadeIn">
+      <div className="w-full max-w-2xl space-y-8 lg:space-y-10 animate-fadeIn pb-8">
       {/* Action Message */}
       {actionMessage && (
         <div
@@ -140,7 +140,7 @@ const MarkAttendance: React.FC = () => {
       </div>
 
       {/* Status Card */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="card overflow-hidden">
         <div className="p-8">
           {/* Current Status */}
           <div className="flex flex-col items-center justify-center mb-8">

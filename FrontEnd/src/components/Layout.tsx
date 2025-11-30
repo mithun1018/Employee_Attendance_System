@@ -59,13 +59,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <div className="min-h-screen bg-slate-50 flex">
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-xl transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static ${
+        className={`fixed inset-y-0 left-0 z-50 bg-white shadow-xl transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
+        style={{ width: 'var(--sidebar-width)' }}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-between h-20 px-6 border-b border-gray-100">
+          <div className="flex items-center justify-between px-6 border-b border-gray-100" style={{ height: 'var(--header-height)' }}>
             <Link to="/" className="flex items-center gap-3">
               <div className="w-11 h-11 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
                 <Clock className="w-6 h-6 text-white" />
@@ -158,7 +159,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <header className="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-30">
+        <header className="bg-white border-b border-gray-100 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-30" style={{ height: 'var(--header-height)' }}>
           <div className="flex items-center gap-4">
             <button
               onClick={() => setSidebarOpen(true)}
@@ -219,7 +220,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-4 lg:p-8 overflow-auto bg-slate-50">{children}</main>
+        <main className="flex-1 overflow-auto bg-slate-50 page-container">
+          <div className="content-wrapper">
+            {children}
+          </div>
+        </main>
       </div>
     </div>
   );

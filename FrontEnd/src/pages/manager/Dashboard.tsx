@@ -52,15 +52,15 @@ const ManagerDashboard: React.FC = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'present':
-        return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+        return 'badge badge-success';
       case 'late':
-        return 'bg-amber-100 text-amber-700 border-amber-200';
+        return 'badge badge-warning';
       case 'half-day':
-        return 'bg-orange-100 text-orange-700 border-orange-200';
+        return 'badge badge-warning';
       case 'absent':
-        return 'bg-red-100 text-red-700 border-red-200';
+        return 'badge badge-danger';
       default:
-        return 'bg-gray-100 text-gray-700 border-gray-200';
+        return 'badge badge-neutral';
     }
   };
 
@@ -103,34 +103,34 @@ const ManagerDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-8 animate-fadeIn">
+    <div className="space-y-8 lg:space-y-10 animate-fadeIn pb-8">
       {/* Hero Header */}
-      <div className="relative overflow-hidden rounded-3xl p-8 text-white" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+      <div className="relative overflow-hidden rounded-3xl p-8 lg:p-10 text-white" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
         {/* Background decorations */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
         
         <div className="relative z-10">
-          <div className="flex items-center gap-2 text-indigo-200 mb-2">
+          <div className="flex items-center gap-2 text-indigo-200 mb-3">
             <Calendar className="w-5 h-5" />
             <span className="text-sm font-medium">{format(new Date(), 'EEEE, MMMM d, yyyy')}</span>
           </div>
-          <h1 className="text-3xl lg:text-4xl font-bold mb-2">
+          <h1 className="text-3xl lg:text-4xl font-bold mb-3">
             Team Overview Dashboard
           </h1>
           <p className="text-indigo-200 text-lg">Monitor your team's attendance and performance</p>
           
           {/* Quick Stats */}
-          <div className="flex flex-wrap gap-6 mt-6">
-            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+          <div className="flex flex-wrap gap-4 lg:gap-6 mt-8">
+            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-2.5">
               <UserCheck className="w-5 h-5" />
               <span className="font-medium">{dashboardStats?.today.present || 0} Present</span>
             </div>
-            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-2.5">
               <AlertCircle className="w-5 h-5" />
               <span className="font-medium">{dashboardStats?.today.late || 0} Late</span>
             </div>
-            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-2.5">
               <XCircle className="w-5 h-5" />
               <span className="font-medium">{dashboardStats?.today.absent || 0} Absent</span>
             </div>
@@ -139,15 +139,15 @@ const ManagerDashboard: React.FC = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
         {statsCards.map((stat, index) => (
           <div
             key={index}
-            className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all duration-300 group"
+            className="card card-hover p-6 lg:p-7 group"
           >
-            <div className="flex items-start justify-between mb-4">
-              <div className={`w-12 h-12 rounded-xl ${stat.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                <stat.icon className={`w-6 h-6 ${stat.textColor}`} />
+            <div className="flex items-start justify-between mb-5">
+              <div className={`w-14 h-14 rounded-xl ${stat.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                <stat.icon className={`w-7 h-7 ${stat.textColor}`} />
               </div>
               <Target className="w-5 h-5 text-gray-300" />
             </div>
@@ -160,7 +160,7 @@ const ManagerDashboard: React.FC = () => {
       {/* Charts and Lists */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Pie Chart */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div className="card p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-lg font-bold text-gray-900">Today's Overview</h2>
@@ -200,7 +200,7 @@ const ManagerDashboard: React.FC = () => {
         </div>
 
         {/* Late Arrivals */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div className="card p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
@@ -248,7 +248,7 @@ const ManagerDashboard: React.FC = () => {
       </div>
 
       {/* Absent Employees */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+      <div className="card p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
@@ -288,7 +288,7 @@ const ManagerDashboard: React.FC = () => {
       </div>
 
       {/* Today's Status Table */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="card overflow-hidden">
         <div className="p-6 border-b border-gray-100 flex items-center justify-between">
           <div>
             <h2 className="text-lg font-bold text-gray-900">Today's Attendance Status</h2>
@@ -302,32 +302,22 @@ const ManagerDashboard: React.FC = () => {
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        <div className="table-container border-0 rounded-none">
+          <table className="table">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-100">
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Employee
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Department
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Check In
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Check Out
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
+              <tr>
+                <th>Employee</th>
+                <th>Department</th>
+                <th>Check In</th>
+                <th>Check Out</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
               {todayStatus.length > 0 ? (
                 todayStatus.slice(0, 10).map((emp) => (
                   <tr key={emp.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td>
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center">
                           <span className="text-white font-bold text-sm">
@@ -340,21 +330,17 @@ const ManagerDashboard: React.FC = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td className="text-gray-600">
                       {emp.department || '-'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td className="text-gray-600">
                       {emp.checkInTime ? format(new Date(emp.checkInTime), 'hh:mm a') : '-'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td className="text-gray-600">
                       {emp.checkOutTime ? format(new Date(emp.checkOutTime), 'hh:mm a') : '-'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize border ${getStatusBadge(
-                          emp.status
-                        )}`}
-                      >
+                    <td>
+                      <span className={getStatusBadge(emp.status)}>
                         {emp.status}
                       </span>
                     </td>
@@ -362,7 +348,7 @@ const ManagerDashboard: React.FC = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center">
+                  <td colSpan={5} className="text-center py-12">
                     <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
                       <Users className="w-8 h-8 text-gray-400" />
                     </div>

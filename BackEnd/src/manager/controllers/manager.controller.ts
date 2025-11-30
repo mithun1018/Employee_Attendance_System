@@ -5,8 +5,11 @@ export async function getAllAttendance(req: Request, res: Response) {
   try {
     const filters = {
       date: req.query.date,
+      startDate: req.query.startDate,
+      endDate: req.query.endDate,
       status: req.query.status,
       userId: req.query.userId,
+      department: req.query.department,
     };
     const data = await managerService.getAllAttendance(filters);
     res.json(data);

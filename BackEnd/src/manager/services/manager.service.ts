@@ -3,6 +3,7 @@ import { Op } from 'sequelize';
 
 export async function getAllAttendance(filters: any) {
   const where: any = {};
+  const userWhere: any = {};
   const targetDate = filters.date || new Date().toISOString().split('T')[0];
 
   // Support both exact date and date range
@@ -29,21 +30,31 @@ export async function getAllAttendance(filters: any) {
     where.userId = filters.userId;
   }
 
+  // Department filter
+  if (filters.department) {
+    userWhere.department = filters.department;
+  }
+
   // Get attendance records
   const attendanceRecords = await Attendance.findAll({
     where,
     include: [{
       model: User,
       attributes: ['id', 'name', 'email', 'employeeId', 'department'],
+      where: Object.keys(userWhere).length > 0 ? userWhere : undefined,
     }],
     order: [['date', 'DESC']],
   });
 
   // If filtering by a specific date (not a range), include absent employees
   if (filters.date && !filters.startDate && !filters.endDate) {
-    // Get all employees
+    // Get all employees (with optional department filter)
+    const employeeWhere: any = { role: 'employee' };
+    if (filters.department) {
+      employeeWhere.department = filters.department;
+    }
     const allEmployees = await User.findAll({
-      where: { role: 'employee' },
+      where: employeeWhere,
       attributes: ['id', 'name', 'email', 'employeeId', 'department'],
     });
 
@@ -66,6 +77,11 @@ export async function getAllAttendance(filters: any) {
     // If filtering specifically for absent, return only absent employees
     if (filters.status === 'absent') {
       return absentEmployees;
+    }
+
+    // If filtering for any other status, return only attendanceRecords (which are already filtered by status)
+    if (filters.status) {
+      return attendanceRecords;
     }
 
     // Otherwise, combine both lists

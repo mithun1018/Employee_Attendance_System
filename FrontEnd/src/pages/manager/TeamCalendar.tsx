@@ -40,9 +40,9 @@ const TeamCalendar: React.FC = () => {
     const startDay = getDay(monthStart);
 
     return (
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="card overflow-hidden">
         {/* Calendar Header */}
-        <div className="p-5 border-b border-gray-100 flex items-center justify-between" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+        <div className="p-5 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-indigo-600 to-purple-600">
           <button
             onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
             className="p-2.5 hover:bg-white/20 rounded-xl transition-colors text-white"
@@ -136,15 +136,15 @@ const TeamCalendar: React.FC = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'present':
-        return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+        return 'badge-success';
       case 'late':
-        return 'bg-amber-100 text-amber-700 border-amber-200';
+        return 'badge-warning';
       case 'half-day':
-        return 'bg-orange-100 text-orange-700 border-orange-200';
+        return 'badge-warning';
       case 'absent':
-        return 'bg-red-100 text-red-700 border-red-200';
+        return 'badge-danger';
       default:
-        return 'bg-gray-100 text-gray-700 border-gray-200';
+        return 'badge-neutral';
     }
   };
 
@@ -186,38 +186,37 @@ const TeamCalendar: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-8 lg:space-y-10 animate-fadeIn pb-8">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Team Calendar</h1>
-        <p className="text-gray-500 mt-1">Overview of team attendance by date</p>
+      <div className="mb-2">
+        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Team Calendar</h1>
+        <p className="text-gray-500 mt-2">Overview of team attendance by date</p>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
         {/* Calendar */}
         <div className="xl:col-span-2">{renderCalendar()}</div>
 
         {/* Selected Date Details */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 h-fit">
-          <div className="p-5 border-b border-gray-100">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
-                <CalendarDays className="w-5 h-5 text-indigo-600" />
+        <div className="card h-fit">
+          <div className="p-6 border-b border-gray-100">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+                <CalendarDays className="w-6 h-6 text-indigo-600" />
               </div>
               <div>
-                <h3 className="font-bold text-gray-900">
+                <h3 className="font-bold text-gray-900 text-lg">
                   {selectedDate ? format(selectedDate, 'MMMM d, yyyy') : 'Select a date'}
                 </h3>
                 {selectedDate && (
-                  <p className="text-sm text-gray-500">{format(selectedDate, 'EEEE')}</p>
+                  <p className="text-sm text-gray-500 mt-0.5">{format(selectedDate, 'EEEE')}</p>
                 )}
               </div>
             </div>
           </div>
 
           {isSelectedToday ? (
-            <div className="p-5">
-              {/* Summary Stats */}
+            <div className="p-6">
               <div className="grid grid-cols-2 gap-3 mb-5">
                 {summaryStats.map((stat, index) => (
                   <div key={index} className={`${stat.bgColor} rounded-xl p-4`}>
@@ -250,11 +249,7 @@ const TeamCalendar: React.FC = () => {
                         <span className="text-xs text-gray-500">{emp.department || 'No dept'}</span>
                       </div>
                     </div>
-                    <span
-                      className={`px-2.5 py-1 rounded-lg text-xs font-semibold capitalize border ${getStatusBadge(
-                        emp.status
-                      )}`}
-                    >
+                    <span className={`badge ${getStatusBadge(emp.status)}`}>
                       {emp.status}
                     </span>
                   </div>

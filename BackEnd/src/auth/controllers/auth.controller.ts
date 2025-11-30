@@ -4,7 +4,7 @@ import { registerUser, loginUser } from '../services/auth.service';
 export async function register(req: Request, res: Response) {
   try {
     const { name, email, password, role, department, employeeId } = req.body;
-    if (!name || !email || !password) return res.status(400).json({ message: 'name, email and password are required' });
+    if (!name || !email || !password || !department) return res.status(400).json({ message: 'name, email, password and department are required' });
 
     const { user, token } = await registerUser({ name, email, password, role, department, employeeId });
 

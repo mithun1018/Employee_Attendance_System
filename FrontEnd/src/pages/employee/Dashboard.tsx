@@ -67,12 +67,12 @@ const EmployeeDashboard: React.FC = () => {
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
-      present: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-      late: 'bg-amber-100 text-amber-700 border-amber-200',
-      'half-day': 'bg-orange-100 text-orange-700 border-orange-200',
-      absent: 'bg-red-100 text-red-700 border-red-200',
+      present: 'badge badge-success',
+      late: 'badge badge-warning',
+      'half-day': 'badge badge-warning',
+      absent: 'badge badge-danger',
     };
-    return styles[status] || 'bg-gray-100 text-gray-700 border-gray-200';
+    return styles[status] || 'badge badge-neutral';
   };
 
   const recentAttendance = history.slice(0, 5);
@@ -114,7 +114,7 @@ const EmployeeDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-8 animate-fadeIn">
+    <div className="space-y-8 lg:space-y-10 animate-fadeIn pb-8">
       {/* Action Message */}
       {actionMessage && (
         <div
@@ -134,18 +134,18 @@ const EmployeeDashboard: React.FC = () => {
       )}
 
       {/* Hero Section - Check In/Out */}
-      <div className="relative overflow-hidden rounded-3xl p-8 text-white" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+      <div className="relative overflow-hidden rounded-3xl p-8 lg:p-10 text-white\" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
         {/* Background decorations */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
         
-        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-12">
           <div>
-            <div className="flex items-center gap-2 text-indigo-200 mb-2">
+            <div className="flex items-center gap-2 text-indigo-200 mb-3">
               <Calendar className="w-5 h-5" />
               <span className="text-sm font-medium">{format(new Date(), 'EEEE, MMMM d, yyyy')}</span>
             </div>
-            <h1 className="text-3xl lg:text-4xl font-bold mb-4">
+            <h1 className="text-3xl lg:text-4xl font-bold mb-5">
               {!hasCheckedIn ? 'Ready to start your day?' : 'Welcome back!'}
             </h1>
             <div className="flex items-center gap-4 text-indigo-100">
@@ -222,7 +222,7 @@ const EmployeeDashboard: React.FC = () => {
         {statsCards.map((stat, index) => (
           <div
             key={index}
-            className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all duration-300 group"
+            className="card card-hover p-6 group"
           >
             <div className="flex items-start justify-between mb-4">
               <div className={`w-12 h-12 rounded-xl ${stat.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
@@ -240,7 +240,7 @@ const EmployeeDashboard: React.FC = () => {
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="card overflow-hidden">
         <div className="p-6 border-b border-gray-100 flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-gray-900">Recent Activity</h2>
@@ -287,7 +287,7 @@ const EmployeeDashboard: React.FC = () => {
                       {record.totalHours.toFixed(1)} hrs
                     </span>
                   )}
-                  <span className={`px-3 py-1.5 rounded-full text-xs font-semibold capitalize border ${getStatusBadge(record.status)}`}>
+                  <span className={getStatusBadge(record.status)}>
                     {record.status}
                   </span>
                 </div>

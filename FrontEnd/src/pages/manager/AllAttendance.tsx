@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchAllAttendance } from '../../store/slices/attendanceSlice';
-import { Search, Filter, Calendar, Users, RefreshCw, X, ClipboardList } from 'lucide-react';
+import { Search, Filter, Calendar, Users, RefreshCw, X, ClipboardList, Building2 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 
 const AllAttendance: React.FC = () => {
@@ -12,7 +12,14 @@ const AllAttendance: React.FC = () => {
     date: todayDate,
     status: '',
     search: '',
+    department: '',
   });
+
+  // Get unique departments from attendance records (only from database)
+  const departments = [...new Set(allAttendance
+    .map(record => record.User?.department)
+    .filter((dept): dept is string => !!dept && dept.trim() !== '')
+  )].sort();
 
   useEffect(() => {
     // Load today's attendance by default (includes absent employees)
@@ -28,27 +35,28 @@ const AllAttendance: React.FC = () => {
       fetchAllAttendance({
         date: filters.date || undefined,
         status: filters.status || undefined,
+        department: filters.department || undefined,
       })
     );
   };
 
   const clearFilters = () => {
-    setFilters({ date: todayDate, status: '', search: '' });
+    setFilters({ date: todayDate, status: '', search: '', department: '' });
     dispatch(fetchAllAttendance({ date: todayDate }));
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'present':
-        return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+        return 'badge badge-success';
       case 'late':
-        return 'bg-amber-100 text-amber-700 border-amber-200';
+        return 'badge badge-warning';
       case 'half-day':
-        return 'bg-orange-100 text-orange-700 border-orange-200';
+        return 'badge badge-warning';
       case 'absent':
-        return 'bg-red-100 text-red-700 border-red-200';
+        return 'badge badge-danger';
       default:
-        return 'bg-gray-100 text-gray-700 border-gray-200';
+        return 'badge badge-neutral';
     }
   };
 
@@ -68,16 +76,16 @@ const AllAttendance: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-8 lg:space-y-10 animate-fadeIn pb-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-2">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">All Attendance</h1>
-          <p className="text-gray-500 mt-1">View and filter employee attendance records</p>
+          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">All Attendance</h1>
+          <p className="text-gray-500 mt-2">View and filter employee attendance records</p>
         </div>
         <button
           onClick={() => dispatch(fetchAllAttendance())}
-          className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors shadow-sm"
+          className="flex items-center gap-2 px-5 py-3 bg-white border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors shadow-sm"
         >
           <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
           Refresh
@@ -85,11 +93,11 @@ const AllAttendance: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <div className="flex flex-col lg:flex-row gap-4 lg:items-end">
+      <div className="filter-section">
+        <div className="flex flex-col lg:flex-row gap-5 lg:gap-6 lg:items-end">
           {/* Search */}
           <div className="flex-1">
-            <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+            <label className="form-label">
               <Search className="w-4 h-4 text-gray-400" />
               Search
             </label>
@@ -98,13 +106,13 @@ const AllAttendance: React.FC = () => {
               placeholder="Search by name, email, or ID..."
               value={filters.search}
               onChange={(e) => handleFilterChange('search', e.target.value)}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white transition-all"
+              className="form-input"
             />
           </div>
 
           {/* Date Filter */}
           <div>
-            <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+            <label className="form-label">
               <Calendar className="w-4 h-4 text-gray-400" />
               Date
             </label>
@@ -112,20 +120,20 @@ const AllAttendance: React.FC = () => {
               type="date"
               value={filters.date}
               onChange={(e) => handleFilterChange('date', e.target.value)}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white transition-all min-w-[160px]"
+              className="form-input min-w-[160px]"
             />
           </div>
 
           {/* Status Filter */}
           <div>
-            <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+            <label className="form-label">
               <Filter className="w-4 h-4 text-gray-400" />
               Status
             </label>
             <select
               value={filters.status}
               onChange={(e) => handleFilterChange('status', e.target.value)}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white transition-all cursor-pointer min-w-[150px]"
+              className="form-input cursor-pointer min-w-[150px]"
             >
               <option value="">All Status</option>
               <option value="present">Present</option>
@@ -135,17 +143,35 @@ const AllAttendance: React.FC = () => {
             </select>
           </div>
 
+          {/* Department Filter */}
+          <div>
+            <label className="form-label">
+              <Building2 className="w-4 h-4 text-gray-400" />
+              Department
+            </label>
+            <select
+              value={filters.department}
+              onChange={(e) => handleFilterChange('department', e.target.value)}
+              className="form-input cursor-pointer min-w-[150px]"
+            >
+              <option value="">All Departments</option>
+              {departments.map((dept) => (
+                <option key={dept} value={dept}>{dept}</option>
+              ))}
+            </select>
+          </div>
+
           {/* Action Buttons */}
           <div className="flex gap-2">
             <button
               onClick={applyFilters}
-              className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg shadow-indigo-500/30"
+              className="btn btn-primary"
             >
               Apply Filters
             </button>
             <button
               onClick={clearFilters}
-              className="px-4 py-3 bg-gray-100 text-gray-600 rounded-xl font-medium hover:bg-gray-200 transition-colors flex items-center gap-2"
+              className="btn btn-secondary"
             >
               <X className="w-4 h-4" />
               Clear
@@ -161,32 +187,18 @@ const AllAttendance: React.FC = () => {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
+      <div className="card overflow-hidden">
+        <div className="table-container border-0 rounded-none">
+          <table className="table">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-100">
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Employee
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Department
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Check In
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Check Out
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Hours
-                </th>
+              <tr>
+                <th>Employee</th>
+                <th>Department</th>
+                <th>Date</th>
+                <th>Check In</th>
+                <th>Check Out</th>
+                <th>Status</th>
+                <th>Hours</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">

@@ -21,7 +21,7 @@ interface UserAttributes {
   password: string;
   role: string;
   employeeId?: string;
-  department?: string;
+  department: string;
 }
 
 interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
@@ -56,6 +56,7 @@ export const User = sequelize.define<Model<UserAttributes, UserCreationAttribute
   },
   department: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
 }, {
   tableName: 'Users',
