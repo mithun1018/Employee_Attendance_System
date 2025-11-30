@@ -132,37 +132,7 @@ npm run dev
 
 ## 📸 Screenshots
 
-### Login Page
-![Login Page](screenshots/login.png)
-*Modern login interface with gradient background*
-
-### Employee Dashboard
-![Employee Dashboard](screenshots/employee-dashboard.png)
-*Employee view with attendance stats and quick actions*
-
-### Mark Attendance
-![Mark Attendance](screenshots/mark-attendance.png)
-*Real-time clock with check-in/check-out functionality*
-
-### Attendance History
-![Attendance History](screenshots/attendance-history.png)
-*Calendar and table view of attendance records*
-
-### Manager Dashboard
-![Manager Dashboard](screenshots/manager-dashboard.png)
-*Team overview with charts and statistics*
-
-### All Attendance (Manager)
-![All Attendance](screenshots/all-attendance.png)
-*View and filter all employee attendance records*
-
-### Reports
-![Reports](screenshots/reports.png)
-*Generate and export attendance reports*
-
-### Team Calendar
-![Team Calendar](screenshots/team-calendar.png)
-*Visual calendar showing team attendance*
+*Screenshots coming soon...*
 
 ## 📁 Project Structure
 
