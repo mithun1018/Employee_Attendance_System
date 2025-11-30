@@ -8,7 +8,7 @@ function generateEmployeeId() {
 }
 
 export async function registerUser({ name, email, password, role = 'employee', department, employeeId }:
-  { name: string; email: string; password: string; role?: string; department?: string; employeeId?: string }) {
+  { name: string; email: string; password: string; role?: string; department: string; employeeId?: string }) {
   const existing = await User.findOne({ where: { email } });
   if (existing) throw new Error('Email already in use');
 
